@@ -7,7 +7,7 @@ class FacebookApi extends Component
 {
 	public $fb;
 	
-	private $token;
+	private $helper;
 	
 	public $app_id = '169681916430784';
 	
@@ -23,28 +23,50 @@ class FacebookApi extends Component
 			  //'default_access_token' => '{access-token}', // optional
 		]);
 		
-		$helper = $this->fb->getCanvasHelper();
+		$this->helper = $this->fb->getCanvasHelper();
 		
+		
+	}
+	public function get($url){
 		try {
-			$this->token = $helper->getAccessToken();
-		} catch(Facebook\Exceptions\FacebookResponseException $e) {
+			$token = $this->helper->getAccessToken();
+			$response = $this->fb->get($url,$token);
+			return $response;
+		} catch(\Facebook\Exceptions\FacebookResponseException $e) {
 			echo 'Graph returned an error: ' . $e->getMessage();
 			exit;
-		} catch(Facebook\Exceptions\FacebookSDKException $e) {
+		} catch(\Facebook\Exceptions\FacebookSDKException $e) {
+			echo 'Facebook SDK returned an error: ' . $e->getMessage();
+			exit;
+		}
+		
+	}
+	
+	public function post($url,$params=[]){
+		try {
+			$token = $this->helper->getAccessToken();
+			$response = $this->fb->post($url,$params,$token);
+			return $response;
+		} catch(\Facebook\Exceptions\FacebookResponseException $e) {
+			echo 'Graph returned an error: ' . $e->getMessage();
+			exit;
+		} catch(\Facebook\Exceptions\FacebookSDKException $e) {
 			echo 'Facebook SDK returned an error: ' . $e->getMessage();
 			exit;
 		}
 	}
 	
-	public function get($url){
-		$response = $this->fb->get($url,$this->token);
-	}
-	
-	public function post($url,$params=[]){
-		$response = $this->fb->post($url,$params,$this->token);
-	}
-	
 	public function delete($url,$params=[]){
-		$response = $this->fb->delete($url,$params,$this->token);
+		try {
+			$token = $this->helper->getAccessToken();
+			$response = $this->fb->delete($url,$params,$token);
+			return $response;
+		} catch(\Facebook\Exceptions\FacebookResponseException $e) {
+			echo 'Graph returned an error: ' . $e->getMessage();
+			exit;
+		} catch(\Facebook\Exceptions\FacebookSDKException $e) {
+			echo 'Facebook SDK returned an error: ' . $e->getMessage();
+			exit;
+		}
 	}
 }
