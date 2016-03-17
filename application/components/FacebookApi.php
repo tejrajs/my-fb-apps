@@ -9,9 +9,9 @@ class FacebookApi extends Component
 	
 	private $token;
 	
-	public $app_id = '192495190824190';
+	public $app_id = '169681916430784';
 	
-	public $app_secret = '07b067bb8867e10bc11636fa4bb6f49d';
+	public $app_secret = 'bbc5cb3735117891cc087aebc5def370';
 	
 	public $default_graph_version = 'v2.5';
 	
