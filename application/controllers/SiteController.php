@@ -12,6 +12,7 @@ use app\components\FacebookApi;
 
 class SiteController extends Controller
 {
+
     public function behaviors()
     {
         return [
@@ -50,9 +51,11 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-    	$fb = new FacebookApi();
+    	$data = new FacebookApi();
     	
-    	$response = $fb->get('/me?fields=id,name');
+    	//$helper = $data->fb->getCanvasHelper();
+    	
+    	$response = $data->fb->get('/me?fields=id,name',$data->accesstoken);
     	$user = $response->getGraphUser();
         return $this->render('index',[
         		'user' => $user
