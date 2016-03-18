@@ -70,11 +70,11 @@ class SiteController extends Controller
     	$data = new FacebookApi();
     	$helper = $data->fb->getRedirectLoginHelper();
     	$permissions = ['email', 'user_likes','user_posts','publish_actions']; // optional
-    	$loginUrl = $helper->getLoginUrl('https://my-fb-apps.herokuapp.com/site/call-back', $permissions);
+    	$loginUrl = $helper->getLoginUrl('https://my-fb-apps.herokuapp.com/site/callback', $permissions);
     	echo '<a href="' . $loginUrl . '">Log in with Facebook!</a>';
     }
     
-    public function actionCallBack()
+    public function actionCallback()
     {
     	$session = new Session();
     	$session->open();
@@ -96,8 +96,7 @@ class SiteController extends Controller
     	if (isset($accessToken)) {
     		// Logged in!
     		$session['facebook_access_token'] = (string) $accessToken;
-    	
-    		header('Location: https://apps.facebook.com/tej_fb_apps/');
+    		return $this->redirect('https://apps.facebook.com/tej_fb_apps/');
     		// Now you can redirect to another page and use the
     		// Now you can redirect to another page and use the
     		// access token from $_SESSION['facebook_access_token']
