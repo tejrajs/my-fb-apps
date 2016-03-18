@@ -36,9 +36,12 @@ class FacebookApi extends Component
 		
 		if(isset($token)){
 			$this->accesstoken = $token;
-// 			$session = new Session();
-// 			$session->open();
-// 			$session['accesstoken'] = $token;
+		}else{
+			$session = new Session();
+			$session->open();
+			if(isset($session['facebook_access_token'])){
+				$this->accesstoken = $token;
+			}
 		}
 	}
 	
