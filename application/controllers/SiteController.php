@@ -17,7 +17,7 @@ class SiteController extends Controller
 	public function beforeAction($action)
 	{
 		if ($action->id == 'callback') {
-			Yii::$app->controller->enableCsrfValidation = false;
+			$this->enableCsrfValidation = false;
 		}
 	
 		return parent::beforeAction($action);
