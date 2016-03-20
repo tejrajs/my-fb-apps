@@ -13,6 +13,16 @@ use Facebook\Facebook;
 
 class SiteController extends Controller
 {
+	
+	public function beforeAction()
+	{
+		if ($this->action->id == 'callback') {
+			Yii::$app->controller->enableCsrfValidation = false;
+		}
+	
+		return true;
+	
+	}
 
     public function behaviors()
     {
@@ -106,7 +116,7 @@ class SiteController extends Controller
     	echo '<a href="' . $loginUrl . '">Log in with Facebook!</a>';
     }
     
-    public function actionCallback()
+    public function actionCallback($code)
     {
     	$session = new Session();
     	$session->open();
