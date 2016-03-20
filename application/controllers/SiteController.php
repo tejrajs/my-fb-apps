@@ -8,8 +8,8 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
-use app\components\FacebookApi;
 use yii\web\Session;
+use Facebook\Facebook;
 
 class SiteController extends Controller
 {
@@ -67,8 +67,24 @@ class SiteController extends Controller
 	
     public function actionConnect()
     {
-    	$data = new FacebookApi();
-    	$helper = $data->fb->getRedirectLoginHelper();
+    	$fb = new Facebook([
+			  'app_id' => '169681916430784',
+			  'app_secret' => 'bbc5cb3735117891cc087aebc5def370',
+			  'default_graph_version' => 'v2.5',
+			  //'default_access_token' => '{access-token}', // optional
+		]);	
+    	
+    	$helper = $fb->getRedirectLoginHelper();
+    	try {
+    		$token = $helper->getAccessToken ();
+    	} catch ( \Facebook\Exceptions\FacebookResponseException $e ) {
+    		echo 'Graph returned an error: ' . $e->getMessage ();
+    		exit ();
+    	} catch ( \Facebook\Exceptions\FacebookSDKException $e ) {
+    		echo 'Facebook SDK returned an error: ' . $e->getMessage();
+    		exit;
+    	}
+    	
     	$permissions = ['email', 'user_likes','user_posts','publish_actions']; // optional
     	$loginUrl = $helper->getLoginUrl('https://my-fb-apps.herokuapp.com/site/callback', $permissions);
     	echo '<a href="' . $loginUrl . '">Log in with Facebook!</a>';
@@ -79,8 +95,14 @@ class SiteController extends Controller
     	$session = new Session();
     	$session->open();
     	
-    	$data = new FacebookApi();
-    	$helper = $data->fb->getRedirectLoginHelper();
+    	$fb = new Facebook([
+			  'app_id' => '169681916430784',
+			  'app_secret' => 'bbc5cb3735117891cc087aebc5def370',
+			  'default_graph_version' => 'v2.5',
+			  //'default_access_token' => '{access-token}', // optional
+		]);	
+    	$helper = $fb->getRedirectLoginHelper();
+    	
     	try {
     		$accessToken = $helper->getAccessToken();
     	} catch(\Facebook\Exceptions\FacebookResponseException $e) {
