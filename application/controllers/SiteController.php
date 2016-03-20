@@ -20,7 +20,7 @@ class SiteController extends Controller
 			Yii::$app->controller->enableCsrfValidation = false;
 		}
 	
-		return true;
+		return parent::beforeAction($action);
 	
 	}
 
