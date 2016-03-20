@@ -14,9 +14,9 @@ use Facebook\Facebook;
 class SiteController extends Controller
 {
 	
-	public function beforeAction()
+	public function beforeAction($action)
 	{
-		if ($this->action->id == 'callback') {
+		if ($action->id == 'callback') {
 			Yii::$app->controller->enableCsrfValidation = false;
 		}
 	
