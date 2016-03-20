@@ -52,7 +52,23 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-    	$data = new FacebookApi();
+    	$fb = new Facebook([
+			  'app_id' => '169681916430784',
+			  'app_secret' => 'bbc5cb3735117891cc087aebc5def370',
+			  'default_graph_version' => 'v2.5',
+			  //'default_access_token' => '{access-token}', // optional
+		]);	
+    	
+    	$helper = $fb->getCanvasHelper ();
+    	try {
+    		$token = $helper->getAccessToken ();
+    	} catch ( \Facebook\Exceptions\FacebookResponseException $e ) {
+    		echo 'Graph returned an error: ' . $e->getMessage ();
+    		exit ();
+    	} catch ( \Facebook\Exceptions\FacebookSDKException $e ) {
+    		echo 'Facebook SDK returned an error: ' . $e->getMessage();
+    		exit;
+    	}
     	
     	//$helper = $data->fb->getCanvasHelper();
     	if(!isset($data->accesstoken)){
