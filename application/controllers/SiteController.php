@@ -93,6 +93,9 @@ class SiteController extends Controller
 	
     public function actionConnect()
     {
+    	$session = new Session();
+    	$session->open();
+    	
     	$fb = new Facebook([
 			  'app_id' => '169681916430784',
 			  'app_secret' => 'bbc5cb3735117891cc087aebc5def370',
