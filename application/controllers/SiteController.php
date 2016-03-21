@@ -13,16 +13,17 @@ use Facebook\Facebook;
 
 class SiteController extends Controller
 {
+	public $enableCsrfValidation = false;
 	
-	public function beforeAction($action)
-	{
-		if ($action->id == 'callback') {
-			$this->enableCsrfValidation = false;
-		}
+// 	public function beforeAction($action)
+// 	{
+// 		if ($action->id == 'callback') {
+// 			$this->enableCsrfValidation = false;
+// 		}
 	
-		return parent::beforeAction($action);
+// 		return parent::beforeAction($action);
 	
-	}
+// 	}
 
     public function behaviors()
     {
