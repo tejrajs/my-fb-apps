@@ -62,6 +62,9 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
+    	$session = new Session();
+    	$session->open();
+    	 
     	$fb = new Facebook([
 			  'app_id' => '169681916430784',
 			  'app_secret' => 'bbc5cb3735117891cc087aebc5def370',
@@ -71,7 +74,7 @@ class SiteController extends Controller
     	
     	$helper = $fb->getCanvasHelper ();
     	try {
-    		$token = $helper->getAccessToken ();
+    		$accessToken = $helper->getAccessToken ();
     	} catch ( \Facebook\Exceptions\FacebookResponseException $e ) {
     		echo 'Graph returned an error: ' . $e->getMessage ();
     		exit ();
@@ -81,10 +84,14 @@ class SiteController extends Controller
     	}
     	
     	//$helper = $data->fb->getCanvasHelper();
-    	if(!isset($token)){
-    		return $this->redirect(['/site/connect']);
+    	if (!isset($accessToken)) {
+    		if(!isset($session['facebook_access_token'])){
+    			return $this->redirect(['/site/connect']);
+    		}else{
+    			$accessToken = $session['facebook_access_token'];
+    		}   		
     	}
-    	$response = -$fb->get('/me?fields=id,name',$data->accesstoken);
+    	$response = -$fb->get('/me?fields=id,name',$accessToken);
     	$user = $response->getGraphUser();
         return $this->render('index',[
         		'user' => $user
