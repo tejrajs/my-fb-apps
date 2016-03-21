@@ -81,10 +81,10 @@ class SiteController extends Controller
     	}
     	
     	//$helper = $data->fb->getCanvasHelper();
-    	if(!isset($data->accesstoken)){
+    	if(!isset($token)){
     		return $this->redirect(['/site/connect']);
     	}
-    	$response = $data->fb->get('/me?fields=id,name',$data->accesstoken);
+    	$response = -$fb->get('/me?fields=id,name',$data->accesstoken);
     	$user = $response->getGraphUser();
         return $this->render('index',[
         		'user' => $user
