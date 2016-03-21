@@ -10,19 +10,21 @@ use app\models\LoginForm;
 use app\models\ContactForm;
 use yii\web\Session;
 use Facebook\Facebook;
+use app\models\SignupForm;
 
 class SiteController extends Controller
 {
+	public $enableCsrfValidation = false;
 	
-	public function beforeAction($action)
-	{
-		if ($action->id == 'callback') {
-			$this->enableCsrfValidation = false;
-		}
+// 	public function beforeAction($action)
+// 	{
+// 		if ($action->id == 'callback') {
+// 			$this->enableCsrfValidation = false;
+// 		}
 	
-		return parent::beforeAction($action);
+// 		return parent::beforeAction($action);
 	
-	}
+// 	}
 
     public function behaviors()
     {
@@ -62,6 +64,9 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
+    	$session = new Session();
+    	$session->open();
+    	 
     	$fb = new Facebook([
 			  'app_id' => '169681916430784',
 			  'app_secret' => 'bbc5cb3735117891cc087aebc5def370',
@@ -71,7 +76,7 @@ class SiteController extends Controller
     	
     	$helper = $fb->getCanvasHelper ();
     	try {
-    		$token = $helper->getAccessToken ();
+    		$accessToken = $helper->getAccessToken ();
     	} catch ( \Facebook\Exceptions\FacebookResponseException $e ) {
     		echo 'Graph returned an error: ' . $e->getMessage ();
     		exit ();
@@ -81,10 +86,14 @@ class SiteController extends Controller
     	}
     	
     	//$helper = $data->fb->getCanvasHelper();
-    	if(!isset($data->accesstoken)){
-    		return $this->redirect(['/site/connect']);
+    	if (!isset($accessToken)) {
+    		if(!isset($session['facebook_access_token'])){
+    			return $this->redirect(['/site/connect']);
+    		}else{
+    			$accessToken = $session['facebook_access_token'];
+    		}   		
     	}
-    	$response = $data->fb->get('/me?fields=id,name',$data->accesstoken);
+    	$response = $fb->get('/me?fields=id,name',$accessToken);
     	$user = $response->getGraphUser();
         return $this->render('index',[
         		'user' => $user
@@ -93,6 +102,9 @@ class SiteController extends Controller
 	
     public function actionConnect()
     {
+    	$session = new Session();
+    	$session->open();
+    	
     	$fb = new Facebook([
 			  'app_id' => '169681916430784',
 			  'app_secret' => 'bbc5cb3735117891cc087aebc5def370',
@@ -191,5 +203,25 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+    /**
+     * Signs user up.
+     *
+     * @return mixed
+     */
+    public function actionSignup()
+    {
+    	$model = new SignupForm();
+    	if ($model->load(Yii::$app->request->post())) {
+    		if ($user = $model->signup()) {
+    			if (Yii::$app->getUser()->login($user)) {
+    				return $this->goHome();
+    			}
+    		}
+    	}
+    
+    	return $this->render('signup', [
+    			'model' => $model,
+    	]);
     }
 }
