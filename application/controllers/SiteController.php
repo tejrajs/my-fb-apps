@@ -116,7 +116,7 @@ class SiteController extends Controller
     	echo '<a href="' . $loginUrl . '">Log in with Facebook!</a>';
     }
     
-    public function actionCallback($code)
+    public function actionCallback()
     {
     	$session = new Session();
     	$session->open();
