@@ -91,7 +91,7 @@ class SiteController extends Controller
     			$accessToken = $session['facebook_access_token'];
     		}   		
     	}
-    	$response = -$fb->get('/me?fields=id,name',$accessToken);
+    	$response = $fb->get('/me?fields=id,name',$accessToken);
     	$user = $response->getGraphUser();
         return $this->render('index',[
         		'user' => $user
